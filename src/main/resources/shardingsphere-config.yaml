@@ -1,0 +1,54 @@
+dataSources:
+  ds_0:
+    dataSourceClassName: com.zaxxer.hikari.HikariDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    jdbcUrl: jdbc:mysql://127.0.0.1:3306/sharding_test_0?useUnicode=true&characterEncoding=UTF-8&rewriteBatchedStatements=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    username: root
+    password: 1713673102wp
+  ds_1:
+    dataSourceClassName: com.zaxxer.hikari.HikariDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    jdbcUrl: jdbc:mysql://127.0.0.1:3306/sharding_test_1?useUnicode=true&characterEncoding=UTF-8&rewriteBatchedStatements=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    username: root
+    password: 1713673102wp
+  ds_2:
+    dataSourceClassName: com.zaxxer.hikari.HikariDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    jdbcUrl: jdbc:mysql://127.0.0.1:3306/sharding_test_2?useUnicode=true&characterEncoding=UTF-8&rewriteBatchedStatements=true&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    username: root
+    password: 1713673102wp
+rules:
+  - !SHARDING
+    tables:
+      t_user:
+        actualDataNodes: ds_${0..2}.t_user_${0..5}
+        databaseStrategy:
+          complex:
+            shardingColumns: region,username
+            shardingAlgorithmName: user_database_complex_mod
+        tableStrategy:
+          complex:
+            shardingColumns: region,username
+            shardingAlgorithmName: user_table_complex_mod
+    shardingAlgorithms:
+      user_database_complex_mod:
+        type: CLASS_BASED
+        props:
+          asia-sharding-table-nodes: "{0..3}"
+          other-sharding-table-nodes: "{4..5}"
+          sharding-count: 6 # 库*表
+          table-sharding-count: 2
+          strategy: complex
+          algorithmClassName: com.lctking.shardingtest.algorithm.UserDataBaseComplexAlgorithm
+      user_table_complex_mod:
+        type: CLASS_BASED
+        props:
+          asia-sharding-table-nodes: "{0..3}"
+          other-sharding-table-nodes: "{4..5}"
+          sharding-count: 6 # 库*表
+          table-sharding-count: 2
+          strategy: complex
+          algorithmClassName: com.lctking.shardingtest.algorithm.UserTableComplexAlgorithm
+
+props:
+  sql-show: true

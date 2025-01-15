@@ -1,0 +1,8 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: user-service
+  datasource:
+    driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
+    url: jdbc:shardingsphere:classpath:shardingsphere-config.yaml
